@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Create your models here.
 class Application(models.Model):
@@ -17,9 +18,9 @@ class Application(models.Model):
     phone = models.IntegerField()
     companyname = models.CharField(max_length=150)
     company_logo = models.ImageField(upload_to='companylogo/')
-    team_background_details = models.TextField()
-    company_and_product_details = models.TextField()
-    problem = models.TextField()
+    team_background = models.TextField(max_length=500)
+    company_and_product_details = models.TextField(max_length=500)
+    problem = models.TextField(max_length=500)
     
     is_approved = models.BooleanField(default=False)
     status = models.CharField(max_length=100, choices=STATUS, default='New')
@@ -30,6 +31,11 @@ class Application(models.Model):
     
     def __str__(self):
         return self.companyname
+    
+    
+
+# user register model 
+
     
     
     
