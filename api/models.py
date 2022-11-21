@@ -17,9 +17,8 @@ class Application(models.Model):
     state = models.CharField(max_length=100)
     phone = models.IntegerField()
     companyname = models.CharField(max_length=150)
-    company_logo = models.ImageField(upload_to='companylogo/')
-    team_background = models.TextField(max_length=500)
-    company_and_product_details = models.TextField(max_length=500)
+    company_logo = models.ImageField(upload_to='companylogo/', null=True, blank=True)
+   
     problem = models.TextField(max_length=500)
     
     is_approved = models.BooleanField(default=False)

@@ -12,8 +12,8 @@ class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = [IsAuthenticated]
     
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

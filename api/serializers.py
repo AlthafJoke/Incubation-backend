@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
-        fields = ['id', 'name', 'address', 'city', 'state', 'phone', 'companyname', 'company_logo', 'team_background', 'company_and_product_details', 'problem', 'is_approved', 'status', 'created_date', 'modified_date' ]
+        fields = ['id', 'name', 'address', 'city', 'state', 'phone', 'companyname', 'company_logo',   'problem', 'is_approved', 'status', 'created_date', 'modified_date' ]
         
         
 
