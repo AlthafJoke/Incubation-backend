@@ -1,16 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from accounts.models import User
+
+
 
 # Create your models here.
 class Application(models.Model):
-    # STATUS = (
-    #     ('New', 'New'),
-    #     ('Pending', 'Pending'),
-    #     ('Approved', 'Approved'),
-    #     ('Declined', 'Declined'),
-        
-    # )
     
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=250 ,blank=True, null=True)
     city = models.CharField(max_length=100 ,blank=True, null=True)
