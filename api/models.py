@@ -18,8 +18,9 @@ class Application(models.Model):
    
     problem = models.TextField(max_length=500,blank=True, null=True)
     
-    is_approved = models.BooleanField(default=False,blank=True, null=True)
+    # is_approved = models.BooleanField(default=False,blank=True, null=True)
     status = models.CharField(max_length=100,  default='Pending',blank=True, null=True)
+    is_slot_allotted  = models.BooleanField(default=False)
     
     created_date    = models.DateTimeField(auto_now_add=True , null=True)
     modified_date   = models.DateTimeField(auto_now=True)
@@ -30,7 +31,17 @@ class Application(models.Model):
     
     
 
-# user register model
+
+class Slot(models.Model):
+    applicant = models.OneToOneField(Application, on_delete=models.CASCADE , blank=True, null=True)
+    status = models.BooleanField(default=False)
+    created_date    = models.DateTimeField(auto_now_add=True , null=True)
+    modified_date   = models.DateTimeField(auto_now=True)
+    
+    def company_name(self):
+        if self.applicant:
+            return self.applicant.companyname
+    
 
     
     

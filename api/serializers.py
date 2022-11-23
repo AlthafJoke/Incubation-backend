@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Application
+from .models import Application, Slot
 from rest_framework.authtoken.views import Token
 from django.contrib.auth.models import User 
 
@@ -9,6 +9,11 @@ from django.contrib.auth.models import User
 class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
+        fields = "__all__"
+        
+class SlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slot
         fields = "__all__"
         
         

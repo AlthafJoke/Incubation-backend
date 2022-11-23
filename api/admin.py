@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Application
+from . models import Application, Slot
 
 
 
@@ -10,3 +10,4 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Application, ApplicationAdmin)
+admin.site.register(Slot)

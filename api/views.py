@@ -1,16 +1,16 @@
 from django.shortcuts import render, get_object_or_404
-from .serializers import ApplicationSerializer
-from .models import Application
+from .serializers import ApplicationSerializer, SlotSerializer
+from .models import Application, Slot
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User 
+
 from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
 
 
 # Create your views here.
@@ -24,6 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['admin'] = user.is_superuser
         token['user'] = user.pk
+        
         
         # ...
 
@@ -54,17 +55,7 @@ class StatusUpdate(APIView):
         
         else:
             return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-        
-        
-    
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = [IsAuthenticated]
-    
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-    
-    
+  
 class ApplicationApproved(viewsets.ModelViewSet):
     # queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
@@ -89,6 +80,26 @@ class UserApplications(APIView): # this class is used to get application by user
         print(result)
         serializser = ApplicationSerializer(result, many=True)
         return Response(serializser.data , status=status.HTTP_200_OK)
+    
+    
+
+class ApplicationSlot(viewsets.ModelViewSet):
+    queryset = Slot.objects.all()
+    serializer_class = SlotSerializer
+    
+    
+@api_view(['POST'])
+# @permission_classes([IsAdminUser])
+def slotAllocate(request, application_id, slot_id):
+  slot = Slot.objects.get(id=slot_id)
+  applicant = Application.objects.get(id=application_id)
+  slot.applicant = applicant
+  slot.status = True
+  slot.save()
+  applicant.is_slot_allotted=True
+  applicant.save()
+  serializer = SlotSerializer(slot)
+  return Response(serializer.data)
     
     
     
