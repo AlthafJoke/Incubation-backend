@@ -18,8 +18,9 @@ class Application(models.Model):
    
     problem = models.TextField(max_length=500,blank=True, null=True)
     
-    # is_approved = models.BooleanField(default=False,blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
     status = models.CharField(max_length=100,  default='Pending',blank=True, null=True)
+    is_rejected = models.BooleanField(default=False)
     is_slot_allotted  = models.BooleanField(default=False)
     
     created_date    = models.DateTimeField(auto_now_add=True , null=True)

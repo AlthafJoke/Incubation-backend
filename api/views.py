@@ -32,9 +32,20 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    
+
+class ApplicationAllOperationViewset(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+    
+    def get(self, request, pk):
+        result = Application.objects.filter(user=pk)
+        print(result)
+        serializser = ApplicationSerializer(result, many=True)
+        return Response(serializser.data , status=status.HTTP_200_OK)
 
 
-class ApplicationViewSet(viewsets.ModelViewSet):
+class ApplicationViewSet(viewsets.ModelViewSet): #this viewset used in admin side for displaying pending list
     # queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     
@@ -55,15 +66,27 @@ class StatusUpdate(APIView):
         
         else:
             return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
-  
+ 
 class ApplicationApproved(viewsets.ModelViewSet):
     # queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     
     def get_queryset(self):
-        result = Application.objects.filter(Q(status='Approved'))
+        result = Application.objects.filter(Q(status='Approved') | Q(is_approved=True))
         
         return result
+    
+@api_view(['GET'])
+def getWaitingApplication(request):
+  Applications = Application.objects.filter(status='Approved', is_slot_allotted=False)
+  serializer = ApplicationSerializer(Applications, many=True)
+  return Response(serializer.data)
+
+@api_view(['GET'])
+def getBookedApplicant(request):
+  Applications = Application.objects.filter(status='Approved', is_slot_allotted=True)
+  serializer = ApplicationSerializer(Applications, many=True)
+  return Response(serializer.data)
 
 
 class ApplicationDelete(viewsets.ModelViewSet):
@@ -87,9 +110,15 @@ class ApplicationSlot(viewsets.ModelViewSet):
     queryset = Slot.objects.all()
     serializer_class = SlotSerializer
     
+
+class ApplicationModify(viewsets.ModelViewSet):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+    
+
+    
     
 @api_view(['POST'])
-# @permission_classes([IsAdminUser])
 def slotAllocate(request, application_id, slot_id):
   slot = Slot.objects.get(id=slot_id)
   applicant = Application.objects.get(id=application_id)
@@ -97,9 +126,12 @@ def slotAllocate(request, application_id, slot_id):
   slot.status = True
   slot.save()
   applicant.is_slot_allotted=True
+  applicant.is_approved =True
   applicant.save()
   serializer = SlotSerializer(slot)
   return Response(serializer.data)
+
+
     
     
     
